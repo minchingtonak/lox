@@ -97,7 +97,21 @@ class Scanner {
                 addToken(match('=') ? GREATER_EQUAL : GREATER);
                 break;
             case '/':
-                if (match('/')) {
+                if (match('*')) {
+                    // Multiline comment
+                    while ((peek() != '*' || peekNext() != '/') && !isAtEnd()) {
+                        if (peek() == '\n')
+                            line++;
+                        advance();
+                    }
+
+                    if (isAtEnd()) {
+                        Lox.error(line, "Unterminated block comment.");
+                    } else {
+                        advance();
+                        advance();
+                    }
+                } else if (match('/')) {
                     // A comment goes until the end of the line.
                     while (peek() != '\n' && !isAtEnd())
                         advance();
@@ -127,6 +141,7 @@ class Scanner {
                 }
                 break;
         }
+
     }
 
     private void identifier() {
