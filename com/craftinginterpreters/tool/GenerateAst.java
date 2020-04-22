@@ -38,9 +38,10 @@ public class GenerateAst {
             defineType(writer, baseName, className, fields);
         }
 
-        // The base accept() method.
+        // The base accept() methods.
         writer.println();
         writer.println("  abstract <R> R accept(Visitor<R> visitor);");
+        writer.println("  abstract <R, T, C> R accept(ContextVisitor<R, C> visitor, C context);");
 
         writer.println("}");
         writer.close();
@@ -53,6 +54,16 @@ public class GenerateAst {
             String typeName = type.split(":")[0].trim();
             writer.println("    R visit" + typeName + baseName + "(" + typeName + " "
                     + baseName.toLowerCase() + ");");
+        }
+
+        writer.println("  }");
+
+        writer.println("  interface ContextVisitor<R, ContextType> {");
+
+        for (String type : types) {
+            String typeName = type.split(":")[0].trim();
+            writer.println("     R visit" + typeName + baseName + "(" + typeName + " "
+                    + baseName.toLowerCase() + ", ContextType context" + ");");
         }
 
         writer.println("  }");
@@ -79,6 +90,13 @@ public class GenerateAst {
         writer.println("    @Override");
         writer.println("    <R> R accept(Visitor<R> visitor) {");
         writer.println("      return visitor.visit" + className + baseName + "(this);");
+        writer.println("    }");
+
+        // Visitor with context.
+        writer.println();
+        writer.println("    @Override");
+        writer.println("    <R, T, C> R accept(ContextVisitor<R, C> visitor, C context) {");
+        writer.println("      return visitor.visit" + className + baseName + "(this, context);");
         writer.println("    }");
 
         // Fields.
