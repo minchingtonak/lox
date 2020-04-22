@@ -9,6 +9,12 @@ abstract class Expr {
     R visitLiteralExpr(Literal expr);
     R visitUnaryExpr(Unary expr);
   }
+  interface ContextVisitor<R, ContextType> {
+     R visitBinaryExpr(Binary expr, ContextType context);
+     R visitGroupingExpr(Grouping expr, ContextType context);
+     R visitLiteralExpr(Literal expr, ContextType context);
+     R visitUnaryExpr(Unary expr, ContextType context);
+  }
   static class Binary extends Expr {
     Binary(Expr left, Token operator, Expr right) {
       this.left = left;
@@ -19,6 +25,11 @@ abstract class Expr {
     @Override
     <R> R accept(Visitor<R> visitor) {
       return visitor.visitBinaryExpr(this);
+    }
+
+    @Override
+    <R, T, C> R accept(ContextVisitor<R, C> visitor, C context) {
+      return visitor.visitBinaryExpr(this, context);
     }
 
     final Expr left;
@@ -35,6 +46,11 @@ abstract class Expr {
       return visitor.visitGroupingExpr(this);
     }
 
+    @Override
+    <R, T, C> R accept(ContextVisitor<R, C> visitor, C context) {
+      return visitor.visitGroupingExpr(this, context);
+    }
+
     final Expr expression;
   }
   static class Literal extends Expr {
@@ -45,6 +61,11 @@ abstract class Expr {
     @Override
     <R> R accept(Visitor<R> visitor) {
       return visitor.visitLiteralExpr(this);
+    }
+
+    @Override
+    <R, T, C> R accept(ContextVisitor<R, C> visitor, C context) {
+      return visitor.visitLiteralExpr(this, context);
     }
 
     final Object value;
@@ -60,9 +81,15 @@ abstract class Expr {
       return visitor.visitUnaryExpr(this);
     }
 
+    @Override
+    <R, T, C> R accept(ContextVisitor<R, C> visitor, C context) {
+      return visitor.visitUnaryExpr(this, context);
+    }
+
     final Token operator;
     final Expr right;
   }
 
   abstract <R> R accept(Visitor<R> visitor);
+  abstract <R, T, C> R accept(ContextVisitor<R, C> visitor, C context);
 }
