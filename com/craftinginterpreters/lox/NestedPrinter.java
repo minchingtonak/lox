@@ -5,13 +5,12 @@ import com.craftinginterpreters.lox.Expr.ContextVisitor;
 import com.craftinginterpreters.lox.Expr.Grouping;
 import com.craftinginterpreters.lox.Expr.Literal;
 import com.craftinginterpreters.lox.Expr.Unary;
-import com.craftinginterpreters.lox.Expr.Visitor;
 
 // TODO better way to handle having subclass of Context tham having it as a generic in the ContextVisitor interface?
 class NestedPrinter implements ContextVisitor<String, PrintContext> {
 
     public String print(Expr expr) {
-        PrintContext pc = new PrintContext();
+        PrintContext pc = new PrintContext(2);
         return expr.accept(this, pc);
     }
 
