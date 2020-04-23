@@ -15,17 +15,25 @@ abstract class Context<T> {
 }
 
 class PrintContext extends Context<String> {
-    PrintContext() {
+
+    private String indent;
+
+    PrintContext(int indent_amount) {
         set("indent", "");
+        StringBuilder sb = new StringBuilder();
+        for (; indent_amount > 0; --indent_amount) {
+            sb.append(" ");
+        }
+        indent = sb.toString();
     }
 
     public String increaseIndent() {
-        return set("indent", get("indent") + "  ");
+        return set("indent", get("indent") + indent);
     }
 
     public String decreaseIndent() {
-        String indent = get("indent");
-        return set("indent", indent.substring(0, indent.length() - 2));
+        String tmp = get("indent");
+        return set("indent", tmp.substring(0, tmp.length() - indent.length()));
     }
 
     public String indent() {
