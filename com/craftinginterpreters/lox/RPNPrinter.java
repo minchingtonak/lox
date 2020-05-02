@@ -3,6 +3,7 @@ package com.craftinginterpreters.lox;
 import com.craftinginterpreters.lox.Expr.Binary;
 import com.craftinginterpreters.lox.Expr.Grouping;
 import com.craftinginterpreters.lox.Expr.Literal;
+import com.craftinginterpreters.lox.Expr.Ternary;
 import com.craftinginterpreters.lox.Expr.Unary;
 import com.craftinginterpreters.lox.Expr.Visitor;
 
@@ -10,6 +11,12 @@ class RPNPrinter implements Visitor<String> {
 
     public String print(Expr expr) {
         return expr.accept(this);
+    }
+
+
+    @Override
+    public String visitTernaryExpr(Ternary expr) {
+        return RPNFormat("?:", expr.condition, expr.if_true, expr.if_false);
     }
 
     @Override

@@ -1,9 +1,16 @@
 package com.craftinginterpreters.lox;
 
+import com.craftinginterpreters.lox.Expr.Ternary;
+
 // Creates an unambiguous, if ugly, string representation of AST nodes.
 class AstPrinter implements Expr.Visitor<String> {
     String print(Expr expr) {
         return expr.accept(this);
+    }
+
+    @Override
+    public String visitTernaryExpr(Ternary expr) {
+        return parenthesize("?:", expr.condition, expr.if_true, expr.if_false);
     }
 
     @Override
@@ -51,4 +58,5 @@ class AstPrinter implements Expr.Visitor<String> {
 
         System.out.println(new AstPrinter().print(expression));
     }
+
 }

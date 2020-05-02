@@ -28,12 +28,25 @@ class Parser {
     }
 
     private Expr comma() {
-        Expr expr = equality();
+        Expr expr = ternary();
 
         while (match(COMMA)) {
             Token operator = previous();
-            Expr right = equality();
+            Expr right = ternary();
             expr = new Expr.Binary(expr, operator, right);
+        }
+
+        return expr;
+    }
+
+    private Expr ternary() {
+        Expr expr = equality();
+
+        if (match(TERNARY)) {
+            Expr if_true = equality();
+            consume(COLON, "Expect ':' in ternary body.");
+            Expr if_false = ternary();
+            expr = new Expr.Ternary(expr, if_true, if_false);
         }
 
         return expr;

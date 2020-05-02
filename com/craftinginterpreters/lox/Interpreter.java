@@ -3,6 +3,7 @@ package com.craftinginterpreters.lox;
 import com.craftinginterpreters.lox.Expr.Binary;
 import com.craftinginterpreters.lox.Expr.Grouping;
 import com.craftinginterpreters.lox.Expr.Literal;
+import com.craftinginterpreters.lox.Expr.Ternary;
 import com.craftinginterpreters.lox.Expr.Unary;
 
 class Interpreter implements Expr.Visitor<Object> {
@@ -18,6 +19,17 @@ class Interpreter implements Expr.Visitor<Object> {
 
     private Object evaluate(Expr expr) {
         return expr.accept(this);
+    }
+
+    @Override
+    public Object visitTernaryExpr(Ternary expr) {
+        // Following evaluation oreder used in binary expression
+        // I'd rather that conditional evaluation was used. Maybe in v2...
+        Object condition = evaluate(expr.condition);
+        Object if_true = evaluate(expr.if_true);
+        Object if_false = evaluate(expr.if_false);
+
+        return isTruthy(condition) ? if_true : if_false;
     }
 
     @Override
