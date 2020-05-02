@@ -1,0 +1,41 @@
+~= Grammar for Lox =~
+
+expression  → literal
+            | unary
+            | binary
+            | ternary
+            | grouping ;
+literal     → NUMBER | STRING | "true" | "false" | "nil" ;
+grouping    → "(" expression ")" ;
+unary       → ( "-" | "!" ) expression ;
+binary      → expression operator expression ;
+ternary     → expression "?" expression ":" expression ;
+operator    → "==" | "!=" | "<" | "<=" | ">" | ">="
+            | "+"  | "-"  | "*" | "/" | "," ;
+
+
+~= Modified for recursive descent parsing =~
+
+expression      → comma ;
+comma           → ternary ( "," ternary )* ;
+ternary         → equality ( "?" equality ":" ternary )? ;
+equality        → comparison ( ( "!=" | "==" ) comparison )* ;
+comparison      → addition ( ( ">" | ">=" | "<" | "<=" ) addition )* ;
+addition        → multiplication ( ( "-" | "+" ) multiplication )* ;
+multiplication  → unary ( ( "/" | "*" ) unary )* ;
+unary           → ( "!" | "-" ) unary
+                | primary ;
+primary         → NUMBER | STRING | "false" | "true" | "nil"
+                | "(" expression ")" ;
+
+
+~= Operator precedence table (descending precedence) =~
+
+Name 	        Operators 	Associates
+Unary 	        ! - 	    Right
+Multiplication 	/ * 	    Left
+Addition 	    - + 	    Left
+Comparison 	    > >= < <= 	Left
+Equality 	    == != 	    Left
+Ternary         ?:          Right
+Comma           ,           Left
