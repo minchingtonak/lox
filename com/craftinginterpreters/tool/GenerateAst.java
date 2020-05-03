@@ -12,11 +12,14 @@ public class GenerateAst {
             System.exit(1);
         }
         String outputDir = args[0];
-        defineAst(outputDir, "Expr",
-                Arrays.asList("Binary   : Expr left, Token operator, Expr right",
-                        "Grouping : Expr expression", "Literal  : Object value",
-                        "Unary    : Token operator, Expr right",
-                        "Ternary  : Expr condition, Expr if_true, Expr if_false"));
+        defineAst(outputDir, "Expr", Arrays.asList("Assign   : Token name, Expr value",
+                "Binary   : Expr left, Token operator, Expr right", "Grouping : Expr expression",
+                "Literal  : Object value", "Unary    : Token operator, Expr right",
+                "Variable : Token name", "Ternary  : Expr condition, Expr if_true, Expr if_false"));
+        defineAst(outputDir, "Stmt",
+                Arrays.asList("Block      : List<Stmt> statements", "Expression : Expr expression",
+                        "Print      : Expr expression",
+                        "Var        : Token name, Expr initializer"));
     }
 
     private static void defineAst(String outputDir, String baseName, List<String> types)

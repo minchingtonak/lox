@@ -1,10 +1,12 @@
 package com.craftinginterpreters.lox;
 
+import com.craftinginterpreters.lox.Expr.Assign;
 import com.craftinginterpreters.lox.Expr.Binary;
 import com.craftinginterpreters.lox.Expr.Grouping;
 import com.craftinginterpreters.lox.Expr.Literal;
 import com.craftinginterpreters.lox.Expr.Ternary;
 import com.craftinginterpreters.lox.Expr.Unary;
+import com.craftinginterpreters.lox.Expr.Variable;
 import com.craftinginterpreters.lox.Expr.Visitor;
 
 class RPNPrinter implements Visitor<String> {
@@ -13,6 +15,16 @@ class RPNPrinter implements Visitor<String> {
         return expr.accept(this);
     }
 
+
+    @Override
+    public String visitAssignExpr(Assign expr) {
+        return RPNFormat("= " + expr.name.lexeme, expr.value);
+    }
+
+    @Override
+    public String visitVariableExpr(Variable expr) {
+        return RPNFormat("var " + expr.name.lexeme);
+    }
 
     @Override
     public String visitTernaryExpr(Ternary expr) {

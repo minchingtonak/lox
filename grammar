@@ -1,5 +1,20 @@
 ~= Grammar for Lox =~
 
+program     → declaration* EOF ;
+
+declaration → varDecl
+            | statement ;
+
+varDecl → "var" IDENTIFIER ( "=" expression )? ";" ;
+
+statement   → exprStmt
+            | printStmt
+            | block ;
+
+exprStmt    → expression ";" ;
+printStmt   → "print" expression ";" ;
+block       → "{" declaration* "}" ;
+
 expression  → literal
             | unary
             | binary
@@ -11,13 +26,15 @@ unary       → ( "-" | "!" ) expression ;
 binary      → expression operator expression ;
 ternary     → expression "?" expression ":" expression ;
 operator    → "==" | "!=" | "<" | "<=" | ">" | ">="
-            | "+"  | "-"  | "*" | "/" | "," ;
+            | "+"  | "-"  | "*" | "/" | "," | "=" ;
 
 
 ~= Modified for recursive descent parsing =~
 
 expression      → comma ;
-comma           → ternary ( "," ternary )* ;
+comma           → assignment ( "," assignment )* ;
+assignment      → IDENTIFIER "=" assignment
+                | ternary ;
 ternary         → equality ( "?" equality ":" ternary )? ;
 equality        → comparison ( ( "!=" | "==" ) comparison )* ;
 comparison      → addition ( ( ">" | ">=" | "<" | "<=" ) addition )* ;
@@ -26,7 +43,7 @@ multiplication  → unary ( ( "/" | "*" ) unary )* ;
 unary           → ( "!" | "-" ) unary
                 | primary ;
 primary         → NUMBER | STRING | "false" | "true" | "nil"
-                | "(" expression ")" ;
+                | "(" expression ")" | IDENTIFIER ;
 
 
 ~= Operator precedence table (descending precedence) =~
@@ -38,4 +55,5 @@ Addition 	    - + 	    Left
 Comparison 	    > >= < <= 	Left
 Equality 	    == != 	    Left
 Ternary         ?:          Right
+Assignment      =           Right
 Comma           ,           Left
