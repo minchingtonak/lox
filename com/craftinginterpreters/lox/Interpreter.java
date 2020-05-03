@@ -86,7 +86,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Object visitTernaryExpr(Ternary expr) {
-        // Following evaluation oreder used in binary expression
+        // Following evaluation order used in binary expression
         // I'd rather that conditional evaluation was used. Maybe in v2...
         Object condition = evaluate(expr.condition);
         Object if_true = evaluate(expr.if_true);
