@@ -181,7 +181,10 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Object visitVariableExpr(Variable expr) {
-        return environment.get(expr.name);
+        Object value = environment.get(expr.name);
+        if (value != null)
+            return environment.get(expr.name);
+        throw new RuntimeError(expr.name, "Access of uninitialized variable.");
     }
 
     private void checkNumberOperand(Token operator, Object operand) {
