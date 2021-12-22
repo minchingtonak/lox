@@ -5,7 +5,7 @@ program     → declaration* EOF ;
 declaration → varDecl
             | statement ;
 
-varDecl → "var" IDENTIFIER ( "=" expression )? ";" ;
+varDecl     → "var" IDENTIFIER ( "=" expression )? ";" ;
 
 statement   → exprStmt
             | printStmt
